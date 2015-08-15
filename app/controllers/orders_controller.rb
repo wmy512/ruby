@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   include CurrentCart
   before_action :set_cart, only: [:new, :create]
-  
+  skip_before_action :authorize, only: [:new, :create]
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /orders
@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     if @cart.line_items.empty?
-      redirect_to store_index_path, notice: "Your cart is empty"
+      redirect_to store_path, notice: "Your cart is empty"
       return
     end
     @order = Order.new
@@ -40,7 +40,7 @@ class OrdersController < ApplicationController
         session[:cart_id] = nil
         OrderNotifier.received(@order).deliver
         
-        format.html { redirect_to store_index_path, notice: 'Thank you for your order.'}
+        format.html { redirect_to store_path, notice: I18n.t('.thanks')}
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }

@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
-  resources :orders
-  resources :line_items
-  resources :carts
-  get 'store/index'
+  get 'admin' => 'admin#index'
+  controller :sessions do
+    get 'login' => :new
+    post 'login' => :create
+    delete 'logout' => :destroy
+  end
+
+  resources :users
 
   resources :products
   resources :products do
@@ -13,7 +17,12 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-  root 'store#index', as: 'store'
+  scope '(:locale)' do
+    resources :orders
+    resources :line_items
+    resources :carts
+    root 'store#index', as: 'store', via: :all
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
