@@ -48,4 +48,6 @@ end
 group :production do
   gem 'mysql2'
 end
-
+gem 'activemerchant', '~> 1.31'
+gem 'haml', '~> 4.0'
+gem 'kaminari', '~> 0.14'
